@@ -17,3 +17,30 @@ The weather in Seoul is 14.7°C. Since that is warmer than 10°C, the current ti
 ```
 ---
 ### SCENARIO 2
+```
+$ python Stopping-The-Loop/agent.py "Call get_current_time over and over until the seconds read exactly 00."
+[sent]   messages=1
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 16:45:12 UTC
+[sent]   messages=3
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 16:45:13 UTC
+[sent]   messages=5
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 16:45:13 UTC
+[sent]   messages=7
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 16:45:14 UTC
+[sent]   messages=9
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 16:45:15 UTC
+[stop]   reason=max_iterations (5)
+Stopped: hit max_iterations (5) without a final answer.
+(.venv) 
+```
+---
