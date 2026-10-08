@@ -6,6 +6,7 @@ from openai import OpenAI
 from tools import REGISTRY, TOOLS
 
 MODEL = "gemma4:e2b-it-qat"
+MAX_ITERATIONS = 5
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama", timeout=120.0)
 
 
@@ -29,7 +30,7 @@ def call_tool(name, arguments):
 def run(prompt):
     messages = [{"role": "user", "content": prompt}]
 
-    while True:
+    for i in range(MAX_ITERATIONS):
         print(f"[sent]   messages={len(messages)}")
         resp = client.chat.completions.create(model=MODEL, messages=messages, tools=TOOLS)
         choice = resp.choices[0]
@@ -45,6 +46,9 @@ def run(prompt):
             result = call_tool(call.function.name, call.function.arguments)
             print(f"[result] {result}")
             messages.append({"role": "tool", "tool_call_id": call.id, "content": result})
+
+    print(f"[stop]   reason=max_iterations ({MAX_ITERATIONS})")
+    return f"Stopped: hit max_iterations ({MAX_ITERATIONS}) without a final answer."
 
 
 if __name__ == "__main__":
