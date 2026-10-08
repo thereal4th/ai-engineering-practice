@@ -1,45 +1,12 @@
 import json
 import sys
-import urllib.parse
-import urllib.request
 
 from openai import OpenAI
 
+from tools import REGISTRY, TOOLS
+
 MODEL = "gemma4:e2b-it-qat"
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-
-
-def get_weather(city):
-    try:
-        g = json.load(urllib.request.urlopen(
-            "https://geocoding-api.open-meteo.com/v1/search?"
-            + urllib.parse.urlencode({"name": city, "count": 1}), timeout=10))
-        if not g.get("results"):
-            return f"Error: no place called {city!r} was found."
-        loc = g["results"][0]
-        w = json.load(urllib.request.urlopen(
-            "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode({
-                "latitude": loc["latitude"], "longitude": loc["longitude"],
-                "current": "temperature_2m,precipitation"}), timeout=10))["current"]
-        return f"{loc['name']}, {loc.get('country', '')}: {w['temperature_2m']}C, precipitation {w['precipitation']}mm"
-    except Exception as e:
-        return f"Error: could not get weather for {city} ({e})"
-
-
-REGISTRY = {"get_weather": get_weather}
-
-TOOLS = [{
-    "type": "function",
-    "function": {
-        "name": "get_weather",
-        "description": "Get the current weather for a city.",
-        "parameters": {
-            "type": "object",
-            "properties": {"city": {"type": "string", "description": "City name, e.g. Seoul"}},
-            "required": ["city"],
-        },
-    },
-}]
 
 
 def call_tool(name, arguments):

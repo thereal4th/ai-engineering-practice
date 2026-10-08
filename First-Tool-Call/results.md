@@ -21,3 +21,16 @@ $ python First-Tool-Call/agent.py
 [recv]   finish_reason=stop
 The current weather in Seoul is 16.2°C with no precipitation.
 ```
+---
+### PASS 3:
+```
+$ python First-Tool-Call/agent.py "What's the current time?"
+[sent]   messages=1
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({})
+[result] 2026-10-08 12:31:27 UTC
+[sent]   messages=3
+[recv]   finish_reason=stop
+The current time is 2026-10-08 12:31:27 UTC.
+(.venv) 
+```
