@@ -29,6 +29,7 @@ def call_tool(name, arguments):
 
 def run(prompt):
     messages = [{"role": "user", "content": prompt}]
+    previous = None
 
     for i in range(MAX_ITERATIONS):
         print(f"[sent]   messages={len(messages)}")
@@ -40,6 +41,12 @@ def run(prompt):
         if choice.finish_reason == "stop":
             print("[stop]   reason=finish_reason=stop")
             return msg.content
+
+        calls = {f"{call.function.name}({call.function.arguments})" for call in msg.tool_calls}
+        if calls == previous:
+            print("[stop]   reason=no-progress")
+            return f"Stopped: no progress, repeated {', '.join(sorted(calls))}."
+        previous = calls
 
         messages.append(msg.model_dump(exclude_none=True))
         for call in msg.tool_calls:
