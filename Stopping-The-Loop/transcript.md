@@ -16,7 +16,7 @@ The weather in Seoul is 14.7°C. Since that is warmer than 10°C, the current ti
 (.venv) 
 ```
 ---
-### SCENARIO 2
+### SCENARIO 2:
 ```
 $ python Stopping-The-Loop/agent.py "Call get_current_time over and over until the seconds read exactly 00."
 [sent]   messages=1
@@ -44,3 +44,16 @@ Stopped: hit max_iterations (5) without a final answer.
 (.venv) 
 ```
 ---
+### SCENARIO 3:
+```
+$ python Stopping-The-Loop/agent.py "I want you on both turns, to call get_current_time once for 2 turns consecutively. Same args as well, use Manila."
+[sent]   messages=1
+[recv]   finish_reason=tool_calls
+[tool]   get_current_time({'timezone': 'Asia/Manila'})
+[result] 2026-10-09 01:07:27 PST
+[sent]   messages=3
+[recv]   finish_reason=tool_calls
+[stop]   reason=no-progress
+Stopped: no progress, repeated get_current_time({"timezone":"Asia/Manila"}).
+(.venv) 
+```
