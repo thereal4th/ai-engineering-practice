@@ -6,7 +6,7 @@ from openai import OpenAI
 from tools import REGISTRY, TOOLS
 
 MODEL = "gemma4:e2b-it-qat"
-client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama", timeout=120.0)
 
 
 def call_tool(name, arguments):
@@ -36,7 +36,8 @@ def run(prompt):
         msg = choice.message
         print(f"[recv]   finish_reason={choice.finish_reason}")
 
-        if choice.finish_reason != "tool_calls":
+        if choice.finish_reason == "stop":
+            print("[stop]   reason=finish_reason=stop")
             return msg.content
 
         messages.append(msg.model_dump(exclude_none=True))
